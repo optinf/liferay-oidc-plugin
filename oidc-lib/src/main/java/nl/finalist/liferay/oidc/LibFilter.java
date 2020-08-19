@@ -91,7 +91,7 @@ public class LibFilter {
         }
 
         liferay.trace("In processFilter()...");
-        if (pathInfo.contains("/portal/login")) {
+        if (pathInfo.toLowerCase().contains("/portal/login")) {
             if (!StringUtils.isBlank(request.getParameter(REQ_PARAM_CODE))
                     && !StringUtils.isBlank(request.getParameter(REQ_PARAM_STATE))) {
 
@@ -110,12 +110,12 @@ public class LibFilter {
                 // no continuation of the filter chain; we expect the redirect to commence.
                 return FilterResult.BREAK_CHAIN;
             }
-        } else if (pathInfo.contains("/portal/logout")) {
+        } else if (pathInfo.toLowerCase().contains("/portal/logout")) {
             final String ssoLogoutUri = oidcConfiguration.ssoLogoutUri();
             final String ssoLogoutParam = oidcConfiguration.ssoLogoutParam();
-            final String ssoLogoutValue = oidcConfiguration.ssoLogoutValue();
-            if (null != ssoLogoutUri && ssoLogoutUri.length() > 0 && isUserLoggedIn(request)) {
+            final String ssoLogoutValue = request.getRequestURI().substring(request.getContextPath().length());
 
+            if (StringUtils.isNotBlank(ssoLogoutUri)) {
                 liferay.trace("About to logout from SSO by redirect to " + ssoLogoutUri);
                 // LOGOUT: If Portal Logout URL is requested, redirect to OIDC Logout resource afterwards to globally logout.
                 // From there, the request should be redirected back to the Liferay portal home page.
