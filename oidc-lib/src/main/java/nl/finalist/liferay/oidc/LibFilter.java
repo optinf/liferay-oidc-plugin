@@ -113,7 +113,7 @@ public class LibFilter {
         } else if (pathInfo.toLowerCase().contains("/portal/logout")) {
             final String ssoLogoutUri = oidcConfiguration.ssoLogoutUri();
             final String ssoLogoutParam = oidcConfiguration.ssoLogoutParam();
-            final String ssoLogoutValue = request.getRequestURI().substring(request.getContextPath().length());
+            final String ssoLogoutValue = oidcConfiguration.ssoLogoutValue();
 
             if (StringUtils.isNotBlank(ssoLogoutUri)) {
                 liferay.trace("About to logout from SSO by redirect to " + ssoLogoutUri);
