@@ -54,9 +54,9 @@ public class LibAutoLogin {
                 String emailAddress = provider.getEmail(userInfo);
                 String givenName = provider.getFirstName(userInfo);
                 String familyName = provider.getLastName(userInfo);
-                String legacyUsername = userInfo.get(oidcConfiguration.legacyUsernameClaim()).toLowerCase();
+                String nickname = userInfo.get(oidcConfiguration.nicknameClaim()).toLowerCase();
 
-                String userId = liferay.createOrUpdateUser(companyId, legacyUsername, emailAddress, givenName, familyName, groups);
+                String userId = liferay.createOrUpdateUser(companyId, nickname, emailAddress, givenName, familyName, groups);
                 liferay.trace("Returning credentials for userId " + userId + ", email: " + emailAddress);
 
                 userResponse = new String[]{userId, UUID.randomUUID().toString(), "false"};

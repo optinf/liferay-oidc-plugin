@@ -134,9 +134,9 @@ public class OpenIDConnectPortalPropsConfiguration implements OIDCConfiguration 
     }
 
     @Override
-    public String legacyUsernameClaim() {
+    public String nicknameClaim() {
         try {
-            return PrefsPropsUtil.getString("openidconnect.legacyusername");
+            return PrefsPropsUtil.getString("openidconnect.nickname");
         } catch (SystemException e) {
             throw new RuntimeException(e);
         }

@@ -74,7 +74,7 @@ public interface OIDCConfiguration {
     String groupClaim();
 
     /**
-     * legacyUsername claim
+     * nickname claim
      */
-    String legacyUsernameClaim();
+    String nicknameClaim();
 }

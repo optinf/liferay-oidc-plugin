@@ -176,11 +176,11 @@ public class LibFilter {
             liferay.debug("Response from UserInfo request: " + userInfoResponse.getBody());
             Map openIDUserInfo = new ObjectMapper().readValue(userInfoResponse.getBody(), HashMap.class);
 
-            String legacyUsernameClaim = oidcConfiguration.legacyUsernameClaim().toLowerCase();
-            String legacyUsername = (String) openIDUserInfo.get(legacyUsernameClaim);
-            liferay.debug("legacyUsername is " +  legacyUsername);
-            if (legacyUsername != null) {
-                openIDUserInfo.put(legacyUsernameClaim, legacyUsername);
+            String nicknameClaim = oidcConfiguration.nicknameClaim().toLowerCase();
+            String nickname = (String) openIDUserInfo.get(nicknameClaim);
+            liferay.debug("nickNameUsername is " +  nickname);
+            if (nickname != null) {
+                openIDUserInfo.put(nicknameClaim, nickname);
             }
 
             liferay.debug("Setting OpenIDUserInfo object in session: " + openIDUserInfo);
