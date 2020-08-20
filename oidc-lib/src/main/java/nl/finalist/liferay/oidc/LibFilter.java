@@ -91,7 +91,7 @@ public class LibFilter {
         }
 
         liferay.trace("In processFilter()...");
-        if (pathInfo.contains("/portal/login")) {
+        if (pathInfo.toLowerCase().contains("/portal/login")) {
             if (!StringUtils.isBlank(request.getParameter(REQ_PARAM_CODE))
                     && !StringUtils.isBlank(request.getParameter(REQ_PARAM_STATE))) {
 
@@ -110,12 +110,12 @@ public class LibFilter {
                 // no continuation of the filter chain; we expect the redirect to commence.
                 return FilterResult.BREAK_CHAIN;
             }
-        } else if (pathInfo.contains("/portal/logout")) {
+        } else if (pathInfo.toLowerCase().contains("/portal/logout")) {
             final String ssoLogoutUri = oidcConfiguration.ssoLogoutUri();
             final String ssoLogoutParam = oidcConfiguration.ssoLogoutParam();
             final String ssoLogoutValue = oidcConfiguration.ssoLogoutValue();
-            if (null != ssoLogoutUri && ssoLogoutUri.length() > 0 && isUserLoggedIn(request)) {
 
+            if (StringUtils.isNotBlank(ssoLogoutUri)) {
                 liferay.trace("About to logout from SSO by redirect to " + ssoLogoutUri);
                 // LOGOUT: If Portal Logout URL is requested, redirect to OIDC Logout resource afterwards to globally logout.
                 // From there, the request should be redirected back to the Liferay portal home page.
@@ -176,6 +176,12 @@ public class LibFilter {
             liferay.debug("Response from UserInfo request: " + userInfoResponse.getBody());
             Map openIDUserInfo = new ObjectMapper().readValue(userInfoResponse.getBody(), HashMap.class);
 
+            String nicknameClaim = oidcConfiguration.nicknameClaim().toLowerCase();
+            String nickname = (String) openIDUserInfo.get(nicknameClaim);
+            liferay.debug("nickNameUsername is " +  nickname);
+            if (nickname != null) {
+                openIDUserInfo.put(nicknameClaim, nickname);
+            }
 
             liferay.debug("Setting OpenIDUserInfo object in session: " + openIDUserInfo);
             request.getSession().setAttribute(OPENID_CONNECT_SESSION_ATTR, openIDUserInfo);

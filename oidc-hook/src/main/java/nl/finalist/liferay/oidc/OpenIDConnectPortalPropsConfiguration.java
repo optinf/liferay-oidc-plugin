@@ -132,4 +132,13 @@ public class OpenIDConnectPortalPropsConfiguration implements OIDCConfiguration 
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String nicknameClaim() {
+        try {
+            return PrefsPropsUtil.getString("openidconnect.nickname");
+        } catch (SystemException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
