@@ -38,6 +38,16 @@ public class LibAutoLogin {
             Map<String, String> userInfo = (Map<String, String>) session.getAttribute(
                     LibFilter.OPENID_CONNECT_SESSION_ATTR);
 
+            // Store access token in the client cookie in a secure manner, to be retrieved later when needed
+            final String accessToken = (String)session.getAttribute(LibFilter.ACCESS_TOKEN_LIFERAY);
+            String accessTokenKeyAndValue = LibFilter.ACCESS_TOKEN_LIFERAY + "=" + accessToken + ";";
+            String securityFlags = " HttpOnly; SameSite=strict; Path=/";
+            if (request.isSecure()) {
+                securityFlags += "; Secure";
+            }
+            response.setHeader("Set-Cookie", accessTokenKeyAndValue + securityFlags);
+
+
             String groupClaim = userInfo.get(oidcConfiguration.groupClaim()).toLowerCase();
             List<String> groups = Arrays.asList(groupClaim.split(" "));
 

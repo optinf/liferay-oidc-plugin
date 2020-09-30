@@ -16,6 +16,11 @@ public interface OIDCConfiguration {
      * Location of the authorization service (request token)
      */
     String authorizationLocation();
+
+    /**
+     * Audience of the access token
+     */
+    String audience();
     
     /**
      * Location of the token service (exchange code for token)

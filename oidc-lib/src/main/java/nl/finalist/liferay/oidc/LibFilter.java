@@ -50,6 +50,7 @@ public class LibFilter {
      * Session attribute name containing the UserInfo
      */
     public static final String OPENID_CONNECT_SESSION_ATTR = "OpenIDConnectUserInfo";
+    public static final String ACCESS_TOKEN_LIFERAY  = "ACCESS_TOKEN_LIFERAY";
 
 
     private final LiferayAdapter liferay;
@@ -185,6 +186,7 @@ public class LibFilter {
 
             liferay.debug("Setting OpenIDUserInfo object in session: " + openIDUserInfo);
             request.getSession().setAttribute(OPENID_CONNECT_SESSION_ATTR, openIDUserInfo);
+            request.getSession().setAttribute(ACCESS_TOKEN_LIFERAY, accessToken);
 
         } catch (OAuthSystemException | OAuthProblemException e) {
             throw new IOException("While exchanging code for access token and retrieving user info", e);
@@ -221,6 +223,7 @@ public class LibFilter {
                     .setClientId(clientId)
                     .setRedirectURI(getRedirectUri(request))
                     .setResponseType("code")
+                    .setParameter("audience", oidcConfiguration.audience())
                     .setScope(oidcConfiguration.scope())
                     .setState(generateStateParam(request))
                     .buildQueryMessage();

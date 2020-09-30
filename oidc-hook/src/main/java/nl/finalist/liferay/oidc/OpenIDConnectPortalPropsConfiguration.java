@@ -35,6 +35,15 @@ public class OpenIDConnectPortalPropsConfiguration implements OIDCConfiguration 
     }
 
     @Override
+    public String audience() {
+        try {
+            return PrefsPropsUtil.getString("openidconnect.audience");
+        } catch (SystemException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public String tokenLocation() {
         try {
             return PrefsPropsUtil.getString("openidconnect.token-location");
