@@ -85,7 +85,12 @@ public class Liferay62Adapter implements LiferayAdapter {
             LOG.debug("Received companyId = " + companyId);
             LOG.debug("Received screenname = " + screenName);
 
-            User user = UserLocalServiceUtil.fetchUserByEmailAddress(companyId, emailAddress);
+            User user = UserLocalServiceUtil.fetchUserByScreenName(companyId, screenName);
+
+            if (user == null) {
+                user = UserLocalServiceUtil.fetchUserByEmailAddress(companyId, emailAddress);
+            }
+
             List<UserGroup> userGroupRoles = UserGroupLocalServiceUtil.getUserGroups(companyId);
 
             List<Long> userGroupsId = mapGroupToUserGroups(groups, userGroupRoles);
@@ -98,7 +103,7 @@ public class Liferay62Adapter implements LiferayAdapter {
                 user = addUser(companyId, screenName, emailAddress, firstName, lastName, userGroupsId);
             } else if (!userGroupsId.isEmpty()) {
                 LOG.debug("User found, updating name details with info from userinfo");
-                updateUser(user, screenName, firstName, lastName, userGroupsId);
+                updateUser(user, screenName, firstName, lastName, emailAddress, userGroupsId);
             } else {
                 LOG.debug("User found but has no groups defined. So deleting user : " + user);
                 UserLocalServiceUtil.deleteUser(user);
@@ -144,8 +149,9 @@ public class Liferay62Adapter implements LiferayAdapter {
 
     private long[] toLongArray(List<Long> arraylist) {
         long[] longArray = new long[arraylist.size()];
-        for (int i = 0; i < longArray.length; i++)
+        for (int i = 0; i < longArray.length; i++) {
             longArray[i] = arraylist.get(i);
+        }
 
         return longArray;
     }
@@ -201,10 +207,11 @@ public class Liferay62Adapter implements LiferayAdapter {
     }
 
 
-    private void updateUser(User user, String screenName, String firstName, String lastName, List<Long> newlyUserGroupIds) {
+    private void updateUser(User user, String screenName, String firstName, String lastName, String emaiAddress, List<Long> newlyUserGroupIds) {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setScreenName(screenName);
+        user.setEmailAddress(emaiAddress);
 
         try {
             UserGroupLocalServiceUtil.clearUserUserGroups(user.getUserId());
